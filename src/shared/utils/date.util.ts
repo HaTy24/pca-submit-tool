@@ -4,7 +4,7 @@ export function getCurrentWeekMondayToSaturday(): string[] {
 
   // Tìm thứ 2 của tuần hiện tại (lùi về thứ 2 nếu hôm nay không phải thứ 2)
   const monday = new Date(today);
-  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 5 : dayOfWeek - 1));
+  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
 
   // Tạo danh sách từ thứ 2 đến thứ 7
   const days: string[] = [];

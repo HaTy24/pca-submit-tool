@@ -4,6 +4,7 @@ import { PcaController } from './pca.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_KEY } from 'src/shared/constants';
+import { TelegramModule } from '../telegram/telegram.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ENV_KEY } from 'src/shared/constants';
       }),
       inject: [ConfigService],
     }),
+    TelegramModule,
   ],
   controllers: [PcaController],
   providers: [PcaService],
