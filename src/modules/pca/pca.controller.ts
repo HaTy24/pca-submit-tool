@@ -25,12 +25,12 @@ export class PcaController {
   submit() {
     try {
       const dates = getCurrentWeekMondayToSaturday();
-      // for (const date of dates) {
-      //   this.pcaService.submit({
-      //     date,
-      //     statistics: [{ id: 158, code: 'FICO-CD-23', value: 100 }],
-      //   });
-      // }
+      for (const date of dates) {
+        this.pcaService.submit({
+          date,
+          statistics: [{ id: 158, code: 'FICO-CD-23', value: 100 }],
+        });
+      }
       this.telegramService.sendMessage(
         `Submit ${dates.length} days successfully!!!\n${dates
           .map((date) => date)

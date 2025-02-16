@@ -1,7 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { catchError, firstValueFrom, of, tap } from 'rxjs';
+import { ENV_KEY } from 'src/shared/constants';
 
 interface Statistic {
   id: number;
@@ -16,10 +18,13 @@ interface DataStatistics {
 
 @Injectable()
 export class PcaService {
-  private logger = new Logger(this.constructor.name);
+  private readonly logger = new Logger(this.constructor.name);
   private isRelogging = false;
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
   private async send(options: AxiosRequestConfig, retryCount = 0) {
     const response: any = await firstValueFrom(
@@ -80,8 +85,8 @@ export class PcaService {
       method: 'POST',
       url: '/login',
       data: {
-        password: '7grj09D7gMeg',
-        username: 'thienty.ha@estuary.solutions',
+        username: this.configService.get(ENV_KEY.PCA_USERNAME),
+        password: this.configService.get(ENV_KEY.PCA_PASSWORD),
       },
     });
 
