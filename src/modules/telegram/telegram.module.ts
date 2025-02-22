@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_KEY } from 'src/shared/constants';
 import { TelegramService } from './telegram.service';
 import { TelegramController } from './telegram.controller';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { PcaModule } from '../pca/pca.module';
 
 @Module({
   imports: [
@@ -16,6 +18,14 @@ import { TelegramController } from './telegram.controller';
       }),
       inject: [ConfigService],
     }),
+    TelegrafModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+      }),
+      inject: [ConfigService],
+    }),
+    PcaModule,
   ],
   controllers: [TelegramController],
   providers: [TelegramService],
