@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError, AxiosRequestConfig } from 'axios';
-import { catchError, firstValueFrom, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, tap } from 'rxjs';
 import { ENV_KEY } from 'src/shared/constants';
 
 interface Statistic {
@@ -12,21 +12,20 @@ interface Statistic {
 }
 
 interface DataStatistics {
-  date: string; // Hoặc Date nếu muốn dùng đối tượng Date
+  date: string;
   statistics: Statistic[];
 }
 
 @Injectable()
 export class PcaService {
   private readonly logger = new Logger(this.constructor.name);
-  private isRelogging = false;
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
-  private async send(options: AxiosRequestConfig, retryCount = 0) {
+  private async send(options: AxiosRequestConfig) {
     const response: any = await firstValueFrom(
       this.httpService.request(options).pipe(
         tap((response) => {
@@ -37,32 +36,24 @@ export class PcaService {
         }),
         catchError(async (error: AxiosError) => {
           if (error.response) {
+            console.log(error.response);
+
             const { status } = error.response;
 
-            // Xử lý 401/404 và retry
-            if ((status === 401 || status === 404) && retryCount < 3) {
-              this.logger.warn(
-                `Received ${status}, attempting re-login ${retryCount}...`,
-              );
+            if (status === 401 || status === 404) {
+              this.logger.warn(`Received ${status}`);
 
-              // Tránh nhiều requests cùng trigger re-login
-              if (!this.isRelogging) {
-                this.isRelogging = true;
-                try {
-                  await this.login();
-                } finally {
-                  this.isRelogging = false;
-                }
-              } else {
-                // Đợi re-login hoàn thành
-                while (this.isRelogging) {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                }
-              }
+              await this.login();
 
-              // Retry request sau khi login lại
               return firstValueFrom(
-                of(await this.send(options, retryCount + 1)),
+                this.httpService.request(options).pipe(
+                  tap((response) => {
+                    const { data, status } = response;
+                    this.logger.log(
+                      `Receive from PCA [${status}]: ${JSON.stringify(data)}`,
+                    );
+                  }),
+                ),
               );
             }
 
@@ -98,13 +89,11 @@ export class PcaService {
     return response;
   }
 
-  public async getProjects() {
+  public async getProjects(params?: { getAll?: boolean; code?: string }) {
     return this.send({
       method: 'GET',
       url: '/api/projects',
-      params: {
-        getAll: true,
-      },
+      params,
     });
   }
 

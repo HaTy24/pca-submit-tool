@@ -41,8 +41,28 @@ export class TelegramService {
     }
   }
 
+  @Hears(/^(\/search) (.+)/)
+  async searchProject(@Ctx() ctx: Context) {
+    if (!('text' in ctx.message)) {
+      await ctx.reply('Invalid message type');
+      return;
+    }
+    const [, data] = ctx.message.text.split(' ~ ');
+    try {
+      const projects = await this.pcaService.getProjects({ code: data });
+      await ctx.reply(
+        `📌 Projects:\n\n${projects.data
+          .map((project) => `➤ ${project.id} - ${project.code}`)
+          .join('\n')}`,
+      );
+    } catch (error) {
+      this.logger.error(error);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+    }
+  }
+
   @Hears(/^(\/add) (.+)/)
-  async addId(@Ctx() ctx: Context) {
+  async addProject(@Ctx() ctx: Context) {
     if (!('text' in ctx.message)) {
       await ctx.reply('Invalid message type');
       return;

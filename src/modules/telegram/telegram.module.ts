@@ -3,7 +3,6 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_KEY } from 'src/shared/constants';
 import { TelegramService } from './telegram.service';
-import { TelegramController } from './telegram.controller';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { PcaModule } from '../pca/pca.module';
 
@@ -27,7 +26,7 @@ import { PcaModule } from '../pca/pca.module';
     }),
     PcaModule,
   ],
-  controllers: [TelegramController],
+  controllers: [],
   providers: [TelegramService],
   exports: [TelegramService],
 })

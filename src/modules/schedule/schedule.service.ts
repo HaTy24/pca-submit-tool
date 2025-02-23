@@ -41,7 +41,8 @@ export class ScheduleService {
           'Submit format:\n👉 `/submit ~ task_id1, task_id2`\n\n' +
           'Other commands:\n' +
           '📌 Get project list: `/projects`\n' +
-          '➕ Add new project: `/add ~ id: project_id, code: project_code`\n\n' +
+          '➕ Add new project: `/add ~ id: project_id, code: project_code`\n' +
+          '🔍 Search project by code: `/search ~ project_code`\n\n' +
           'Thanks! 🚀',
       );
     } catch (error) {
