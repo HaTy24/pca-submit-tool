@@ -91,6 +91,16 @@ export class TelegramEventHandler {
     const [, data] = ctx.message.text.split(' ~ ');
     try {
       const [id, code] = data.split(',');
+      const existingProject = await this.projectService.getOne({
+        id: parseInt(id.trim().split(':')[1].trim()),
+      });
+      if (existingProject) {
+        await ctx.reply(
+          '⚠️ Project already exists!\n\n' +
+            `📌 Project:\n\n➤ ${existingProject.id} - ${existingProject.code}`,
+        );
+        return;
+      }
       await this.projectService.create({
         id: parseInt(id.trim().split(':')[1].trim()),
         code: code.trim().split(':')[1].trim(),
