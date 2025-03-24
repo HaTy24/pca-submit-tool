@@ -7,20 +7,17 @@ import { tap, catchError, firstValueFrom } from 'rxjs';
 import { ENV_KEY } from 'src/shared/constants';
 import { Context } from 'telegraf';
 import { PcaService } from '../pca/pca.service';
+import { ProjectService } from '../project/project.service';
 
 @Update()
 @Injectable()
-export class TelegramService {
+export class TelegramEventHandler {
   private readonly logger = new Logger(this.constructor.name);
-  private projects: any[] = [
-    { id: 158, code: 'FICO-CD-23' },
-    { id: 197, code: 'VMD-IWS-OP-24' },
-    { id: 254, code: 'DEHEUS-INCENTIVEMANAGEMENT-OTHER-CD-24' },
-  ];
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
     private readonly pcaService: PcaService,
+    private readonly projectService: ProjectService,
   ) {}
 
   @Start()
@@ -28,10 +25,34 @@ export class TelegramService {
     await ctx.reply('Welcome');
   }
 
+  @Hears('/help')
+  async help(@Ctx() ctx: Context) {
+    try {
+      await ctx.reply(
+        '👉 Submit: `/submit ~ task_id1, task_id2`\n' +
+          '📌 Get project list: `/projects`\n' +
+          '➕ Add new project: `/add ~ id: project_id, code: project_code`\n' +
+          '🔍 Search project by code: `/search ~ project_code`\n',
+      );
+    } catch (error) {
+      this.logger.error(error);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+    }
+  }
+
   @Hears('/projects')
   async getProjects(@Ctx() ctx: Context) {
     try {
-      const message = this.projects
+      const projects = await this.projectService.getAll();
+
+      if (!projects.length) {
+        await ctx.reply(
+          '⚠️ No projects found. Please add a new project using:\n\n➕ `/add ~ id: project_id, code: project_code`',
+        );
+        return;
+      }
+
+      const message = projects
         .map((project) => `➤ ${project.id} - ${project.code}`)
         .join('\n');
       await ctx.reply(`📌 Projects:\n\n${message}`);
@@ -70,15 +91,13 @@ export class TelegramService {
     const [, data] = ctx.message.text.split(' ~ ');
     try {
       const [id, code] = data.split(',');
-      this.projects.push({
+      await this.projectService.create({
         id: parseInt(id.trim().split(':')[1].trim()),
         code: code.trim().split(':')[1].trim(),
+        name: code.trim().split(':')[1].trim(),
       });
       await ctx.reply(
-        'Successfully added!\n\n' +
-          `📌 Projects:\n\n${this.projects
-            .map((project) => `➤ ${project.id} - ${project.code}`)
-            .join('\n')}`,
+        'Successfully added!\n\n' + `📌 Project:\n\n➤ ${id} - ${code}`,
       );
     } catch (error) {
       this.logger.error(error);
@@ -95,9 +114,9 @@ export class TelegramService {
     const [, data] = ctx.message.text.split(' ~ ');
     try {
       const projectIds = data.split(',').map((id) => parseInt(id.trim()));
-      const projects = this.projects.filter((project) =>
-        projectIds.includes(project.id),
-      );
+      const projects = await this.projectService.getAll({
+        id: { $in: projectIds },
+      });
 
       let value = [];
       if (projects.length === 3) {

@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_KEY } from 'src/shared/constants';
-import { TelegramService } from './telegram.service';
+import { TelegramEventHandler } from './telegram-event.handler';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { PcaModule } from '../pca/pca.module';
+import { ProjectModule } from '../project/project.module';
 
 @Module({
   imports: [
@@ -25,9 +26,10 @@ import { PcaModule } from '../pca/pca.module';
       inject: [ConfigService],
     }),
     PcaModule,
+    ProjectModule,
   ],
   controllers: [],
-  providers: [TelegramService],
-  exports: [TelegramService],
+  providers: [TelegramEventHandler],
+  exports: [TelegramEventHandler],
 })
 export class TelegramModule {}

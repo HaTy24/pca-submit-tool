@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PcaService } from '../pca/pca.service';
-import { TelegramService } from '../telegram/telegram.service';
+import { TelegramEventHandler } from '../telegram/telegram-event.handler';
 
 @Injectable()
 export class ScheduleService {
   private readonly logger = new Logger(this.constructor.name);
   constructor(
     private readonly pcaService: PcaService,
-    private readonly telegramService: TelegramService,
+    private readonly telegramService: TelegramEventHandler,
   ) {}
 
   // // At 08:00 PM, only on Monday, Tuesday, Wednesday, Thursday, Friday, and Saturday
