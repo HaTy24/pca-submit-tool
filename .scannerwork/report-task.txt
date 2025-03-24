@@ -2,5 +2,5 @@ projectKey=pca-submit-tool
 serverUrl=http://localhost:9000
 serverVersion=25.2.0.102705
 dashboardUrl=http://localhost:9000/dashboard?id=pca-submit-tool
-ceTaskId=4db6c4a8-526c-4045-9d08-8f722c00cae4
-ceTaskUrl=http://localhost:9000/api/ce/task?id=4db6c4a8-526c-4045-9d08-8f722c00cae4
+ceTaskId=c07a8408-e9d5-461b-a826-c336cfd63124
+ceTaskUrl=http://localhost:9000/api/ce/task?id=c07a8408-e9d5-461b-a826-c336cfd63124
