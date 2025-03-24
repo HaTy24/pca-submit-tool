@@ -20,11 +20,7 @@ export class PaginationDTO {
   // Purpose is to disallow external services to touch the original filter
   protected _filter: Record<string, any> = {};
 
-  protected parseFilters() {}
-
   public get filter(): Record<string, any> {
-    this.parseFilters();
-
     return this._filter;
   }
 

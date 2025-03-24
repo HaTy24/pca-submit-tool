@@ -17,11 +17,11 @@ export class PcaController {
   }
 
   @Get('submit')
-  submit() {
+  async submit() {
     const date = new Date().toISOString().split('T')[0];
     const statistics = [{ id: 158, code: 'FICO-CD-23', value: 100 }];
     try {
-      this.pcaService.submit({
+      await this.pcaService.submit({
         date,
         statistics,
       });

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProjectSchema } from 'src/database/schemas/project.schema';
-import { Project } from 'src/database/schemas/project.schema';
+import { Project, ProjectSchema } from 'src/database/schemas/project.schema';
 import { ProjectService } from './project.service';
 import { ProjectController } from './project.controller';
 import { PcaModule } from '../pca/pca.module';

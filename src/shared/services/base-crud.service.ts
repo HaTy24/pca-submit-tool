@@ -142,8 +142,6 @@ export class BaseCRUDService {
 
   public async bulkCreate(payload: any[]): Promise<void> {
     await this.domainModel.insertMany(payload);
-
-    return;
   }
 
   public updateById(id: string, updateDTO: any, session?: ClientSession) {

@@ -7,7 +7,9 @@ import { BaseCRUDService } from 'src/shared/services/base-crud.service';
 @Injectable()
 export class ProjectService extends BaseCRUDService {
   private readonly logger = new Logger(ProjectService.name);
-  constructor(@InjectModel(Project.name) private projectModel: Model<Project>) {
+  constructor(
+    @InjectModel(Project.name) private readonly projectModel: Model<Project>,
+  ) {
     super(projectModel);
   }
 }

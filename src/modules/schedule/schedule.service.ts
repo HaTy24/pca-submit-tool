@@ -36,7 +36,7 @@ export class ScheduleService {
   @Cron('0 19 * * 1,2,3,4,5,6')
   async handleCron() {
     try {
-      this.telegramService.sendMessage(
+      await this.telegramService.sendMessage(
         "🔔 Reminder: Don't forget to submit today's work!\n\n" +
           'Submit format:\n👉 `/submit ~ task_id1, task_id2`\n\n' +
           'Other commands:\n' +
