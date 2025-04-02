@@ -7,6 +7,7 @@ import { TelegramModule } from './modules/telegram/telegram.module';
 import { MailerModule } from './modules/mailer/mailer.module';
 import { ENV_KEY } from './shared/constants';
 import { ProjectModule } from './modules/project/project.module';
+import { CloudStorageModule } from './modules/cloud-storage/cloud-storage.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
@@ -21,6 +22,7 @@ import { ProjectModule } from './modules/project/project.module';
     ScheduleModule,
     TelegramModule,
     ProjectModule,
+    CloudStorageModule,
   ],
 })
 export class AppModule {}
