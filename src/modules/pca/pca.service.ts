@@ -5,16 +5,26 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 import { catchError, firstValueFrom, tap } from 'rxjs';
 import { ENV_KEY } from 'src/shared/constants';
 
-interface Statistic {
-  id: number;
-  code: string;
-  value: number;
-}
+type StatisticPayload = {
+  id?: number;
+  code?: string;
+  value?: number;
+};
 
-interface DataStatistics {
-  date: string;
-  statistics: Statistic[];
-}
+type DataStatisticsPayload = {
+  date?: string;
+  statistics?: StatisticPayload[];
+};
+
+type GetProjectsPayload = {
+  getAll?: boolean;
+  code?: string;
+};
+
+type GetSubmittedStatisticsPayload = {
+  date_current?: string;
+  limit?: number;
+};
 
 @Injectable()
 export class PcaService {
@@ -23,7 +33,9 @@ export class PcaService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.login();
+  }
 
   private async send(options: AxiosRequestConfig) {
     const response: any = await firstValueFrom(
@@ -36,8 +48,6 @@ export class PcaService {
         }),
         catchError(async (error: AxiosError) => {
           if (error.response) {
-            console.log(error.response);
-
             const { status } = error.response;
 
             if (status === 401 || status === 404) {
@@ -89,7 +99,7 @@ export class PcaService {
     return response;
   }
 
-  public async getProjects(params?: { getAll?: boolean; code?: string }) {
+  public async getProjects(params?: GetProjectsPayload) {
     return this.send({
       method: 'GET',
       url: '/api/projects',
@@ -97,7 +107,15 @@ export class PcaService {
     });
   }
 
-  public async submit(data: DataStatistics) {
+  public async getSubmittedStatistics(params?: GetSubmittedStatisticsPayload) {
+    return this.send({
+      method: 'GET',
+      url: '/api/statistics/0',
+      params,
+    });
+  }
+
+  public async submit(data: DataStatisticsPayload) {
     return this.send({
       method: 'POST',
       url: '/api/statistics/0',
