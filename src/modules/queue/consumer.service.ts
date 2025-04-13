@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import amqp, { ChannelWrapper } from 'amqp-connection-manager';
 import { ConfirmChannel } from 'amqplib';
 import { ENV_KEY, QUEUE_NAME } from 'src/shared/constants';
-import { CloudStorageFactory } from '../cloud-storage/cloud-storage.factory';
+import { CloudStorageService } from '../cloud-storage/cloud-storage.service';
 
 @Injectable()
 export class ConsumerService implements OnModuleInit {
@@ -11,7 +11,7 @@ export class ConsumerService implements OnModuleInit {
   private channelWrapper: ChannelWrapper;
   constructor(
     private readonly configService: ConfigService,
-    private readonly cloudStorageFactory: CloudStorageFactory,
+    private readonly cloudStorageService: CloudStorageService,
   ) {
     const connection = amqp.connect([
       this.configService.getOrThrow(ENV_KEY.RABBITMQ_CONN),
@@ -22,8 +22,8 @@ export class ConsumerService implements OnModuleInit {
   public async onModuleInit() {
     try {
       await this.channelWrapper.addSetup(async (channel: ConfirmChannel) => {
-        await channel.assertQueue(QUEUE_NAME.UPLOAD, { durable: true });
-        await channel.consume(QUEUE_NAME.UPLOAD, async (message) => {
+        await channel.assertQueue(QUEUE_NAME.UPLOAD_QUEUE, { durable: true });
+        await channel.consume(QUEUE_NAME.UPLOAD_QUEUE, async (message) => {
           if (message) {
             const content = JSON.parse(message.content.toString());
             const { file, filePath, providerName } = content;
@@ -32,11 +32,11 @@ export class ConsumerService implements OnModuleInit {
               'base64',
             ) as unknown as Express.Multer.File;
 
-            // Get the cloud storage provider
-            const provider = this.cloudStorageFactory.getProvider(providerName);
-
-            // Upload the file using the provider
-            await provider.uploadFile(fileBuffer, filePath);
+            await this.cloudStorageService.uploadFileToCloudStorage(
+              fileBuffer,
+              filePath,
+              providerName,
+            );
             this.logger.log('File uploaded successfully:', filePath);
 
             // Acknowledge the message

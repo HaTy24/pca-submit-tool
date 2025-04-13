@@ -14,7 +14,7 @@ export class ProducerService {
     ]);
     this.channelWrapper = connection.createChannel({
       setup: (channel: Channel) => {
-        return channel.assertQueue('emailQueue', { durable: true });
+        return channel.assertQueue(QUEUE_NAME.UPLOAD_QUEUE, { durable: true });
       },
     });
   }
@@ -22,7 +22,7 @@ export class ProducerService {
   async addToEmailQueue(mail: any) {
     try {
       await this.channelWrapper.sendToQueue(
-        QUEUE_NAME.EMAIL,
+        QUEUE_NAME.EMAIL_QUEUE,
         Buffer.from(JSON.stringify(mail)),
         {
           persistent: true,
@@ -42,7 +42,7 @@ export class ProducerService {
   async addToUploadQueue(data: any) {
     try {
       await this.channelWrapper.sendToQueue(
-        QUEUE_NAME.UPLOAD,
+        QUEUE_NAME.UPLOAD_QUEUE,
         Buffer.from(JSON.stringify(data)),
         {
           persistent: true,
@@ -51,10 +51,10 @@ export class ProducerService {
 
       this.logger.debug('Sent To Upload Queue:', JSON.stringify(data));
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(error);
 
       throw new HttpException(
-        'Error adding mail to queue',
+        'Error adding file to queue',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

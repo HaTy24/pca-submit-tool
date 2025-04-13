@@ -45,6 +45,22 @@ export class CloudStorageService implements CloudStorageProvider {
     }
   }
 
+  async uploadFileToCloudStorage(
+    file: Express.Multer.File,
+    filePath: string,
+    providerName: string,
+  ): Promise<string> {
+    try {
+      const provider = this.cloudStorageFactory.getProvider(providerName);
+      const uploadResult = await provider.uploadFile(file, filePath);
+      return uploadResult;
+    } catch (error) {
+      throw new Error(
+        `Failed to upload file to cloud storage: ${error.message}`,
+      );
+    }
+  }
+
   /**
    * Deletes a file from the cloud storage provider.
    * @param filePath The path of the file to delete.

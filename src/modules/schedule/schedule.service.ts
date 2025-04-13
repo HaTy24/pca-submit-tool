@@ -27,7 +27,7 @@ export class ScheduleService {
   //   } catch (error) {
   //     this.logger.error(error);
   //     this.telegramService.sendMessage(
-  //       `❌ Error occurred!\nDate: ${date}\nStatistics: ${JSON.stringify(statistics)}\nError: ${error.message || error}`,
+  //       `❌ Error occurred!\nDate: ${date}\nStatistics: ${JSON.stringify(statistics)}\nError: ${error.message ?? error}`,
   //     );
   //   }
   // }
@@ -48,7 +48,7 @@ export class ScheduleService {
     } catch (error) {
       this.logger.error(error);
       this.telegramService.sendMessage(
-        `❌ ${this.constructor.name}\nError occurred!\nError: ${error.message || error}`,
+        `❌ ${this.constructor.name}\nError occurred!\nError: ${error.message ?? error}`,
       );
     }
   }

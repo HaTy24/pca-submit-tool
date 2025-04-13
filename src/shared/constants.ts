@@ -24,6 +24,14 @@ export const CLOUDSTORAGE = {
 };
 
 export const QUEUE_NAME = {
-  EMAIL: 'emailQueue',
-  UPLOAD: 'uploadQueue',
+  EMAIL_QUEUE: 'email_queue',
+  UPLOAD_QUEUE: 'upload_queue',
+  IMAGE_QUEUE: 'image_queue',
+};
+
+export const MICROSERVICE_MESSAGE_PATTERNS = {
+  IMAGE: {
+    IMAGE_UPLOADED: 'image-uploaded',
+    IMAGE_PROCESSED: 'image-processed',
+  },
 };

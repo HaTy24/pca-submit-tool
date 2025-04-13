@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PcaModule } from './modules/pca/pca.module';
-import { ScheduleModule } from './modules/schedule/schedule.module';
-import { TelegramModule } from './modules/telegram/telegram.module';
-import { MailerModule } from './modules/mailer/mailer.module';
-import { ENV_KEY } from './shared/constants';
-import { ProjectModule } from './modules/project/project.module';
 import { CloudStorageModule } from './modules/cloud-storage/cloud-storage.module';
+import { ImageModule } from './modules/image/image.module';
+import { MailerModule } from './modules/mailer/mailer.module';
+import { PcaModule } from './modules/pca/pca.module';
+import { ProjectModule } from './modules/project/project.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
+import { ENV_KEY } from './shared/constants';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
@@ -20,9 +20,9 @@ import { CloudStorageModule } from './modules/cloud-storage/cloud-storage.module
     MailerModule,
     PcaModule,
     ScheduleModule,
-    TelegramModule,
     ProjectModule,
     CloudStorageModule,
+    ImageModule,
   ],
 })
 export class AppModule {}
