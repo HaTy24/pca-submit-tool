@@ -39,7 +39,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -60,7 +60,7 @@ export class TelegramEventHandler {
       await ctx.reply(`📌 Projects:\n\n${message}`);
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -84,7 +84,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -119,7 +119,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -160,7 +160,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -214,7 +214,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 
@@ -262,7 +262,7 @@ export class TelegramEventHandler {
       );
     } catch (error) {
       this.logger.error(error);
-      ctx.reply(`❌ Error occurred!\nError: ${error.message || error}`);
+      ctx.reply(`❌ Error occurred!\nError: ${error.message ?? error}`);
     }
   }
 

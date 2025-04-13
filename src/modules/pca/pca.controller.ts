@@ -1,5 +1,6 @@
 import { Controller, Get, Logger } from '@nestjs/common';
 import { PcaService } from './pca.service';
+import { format } from 'date-fns';
 
 @Controller('pca')
 export class PcaController {
@@ -18,7 +19,7 @@ export class PcaController {
 
   @Get('submit')
   async submit() {
-    const date = new Date().toISOString().split('T')[0];
+    const date = format(new Date(), 'yyyy-MM-dd');
     const statistics = [{ id: 158, code: 'FICO-CD-23', value: 100 }];
     try {
       await this.pcaService.submit({

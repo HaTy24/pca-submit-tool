@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
-import { StorageController } from './cloud-storage.controller';
+import { forwardRef, Module } from '@nestjs/common';
+import { QueueModule } from '../queue/queue.module';
 import { CloudStorageFactory } from './cloud-storage.factory';
+import { CloudStorageService } from './cloud-storage.service';
 import { DropboxProvider } from './dropbox.provider';
 
 @Module({
-  controllers: [StorageController],
-  providers: [DropboxProvider, CloudStorageFactory],
-  exports: [DropboxProvider, CloudStorageFactory],
+  imports: [forwardRef(() => QueueModule)],
+  providers: [DropboxProvider, CloudStorageFactory, CloudStorageService],
+  exports: [CloudStorageFactory, CloudStorageService],
 })
 export class CloudStorageModule {}

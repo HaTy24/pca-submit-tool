@@ -21,7 +21,7 @@ import { ProjectModule } from '../project/project.module';
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+        token: configService.getOrThrow(ENV_KEY.TELEGRAM_BOT_TOKEN),
       }),
       inject: [ConfigService],
     }),

@@ -13,8 +13,25 @@ export const ENV_KEY = {
 
   // CLOUDSTORAGE
   STORAGE_PROVIDER: 'STORAGE_PROVIDER',
+  DROPBOX_ACCESS_TOKEN: 'DROPBOX_ACCESS_TOKEN',
+
+  // RABBITMQ
+  RABBITMQ_CONN: 'RABBITMQ_CONN',
 };
 
 export const CLOUDSTORAGE = {
   DROPBOX: 'dropbox',
+};
+
+export const QUEUE_NAME = {
+  EMAIL_QUEUE: 'email_queue',
+  UPLOAD_QUEUE: 'upload_queue',
+  IMAGE_QUEUE: 'image_queue',
+};
+
+export const MICROSERVICE_MESSAGE_PATTERNS = {
+  IMAGE: {
+    IMAGE_UPLOADED: 'image-uploaded',
+    IMAGE_PROCESSED: 'image-processed',
+  },
 };

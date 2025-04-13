@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Dropbox } from 'dropbox';
+import { ENV_KEY } from 'src/shared/constants';
 import { CloudStorageProvider } from 'src/shared/interfaces';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class DropboxProvider implements CloudStorageProvider {
 
   constructor(private readonly configService: ConfigService) {
     this.dropbox = new Dropbox({
-      accessToken: this.configService.getOrThrow('DROPBOX_ACCESS_TOKEN'),
+      accessToken: this.configService.getOrThrow(ENV_KEY.DROPBOX_ACCESS_TOKEN),
     });
   }
 
@@ -21,7 +22,7 @@ export class DropboxProvider implements CloudStorageProvider {
       // Upload file to Dropbox
       const response = await this.dropbox.filesUpload({
         path: filePath,
-        contents: file.buffer,
+        contents: file,
         mode: { '.tag': 'overwrite' },
       });
 
@@ -46,13 +47,21 @@ export class DropboxProvider implements CloudStorageProvider {
   }
 
   async deleteFile(filePath: string): Promise<void> {
-    await this.dropbox.filesDeleteV2({ path: filePath });
+    try {
+      await this.dropbox.filesDeleteV2({ path: filePath });
+    } catch (error) {
+      throw new Error(`Failed to delete file: ${error.message}`);
+    }
   }
 
   async getFileUrl(filePath: string): Promise<string> {
-    const response = await this.dropbox.sharingCreateSharedLinkWithSettings({
-      path: filePath,
-    });
-    return response.result.url;
+    try {
+      const response = await this.dropbox.sharingCreateSharedLinkWithSettings({
+        path: filePath,
+      });
+      return response.result.url;
+    } catch (error) {
+      throw new Error(`Failed to get file URL: ${error.message}`);
+    }
   }
 }
